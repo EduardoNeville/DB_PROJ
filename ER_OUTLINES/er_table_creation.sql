@@ -1,10 +1,24 @@
 CREATE TABLE USERS (
         Uid INT NOT NULL AUTO_INCREMENT,
         Name VARCHAR(20) NOT NULL,
-        elite BOOLEAN NOT NULL,
         yelp_since DATE NOT NULL,
+        average_stars FLOAT,
+        review_count INT NOT NULL,
         fans INT NOT NULL, -- TBD if this is the correct way maybe we find way to tell if fan
-
+        elite BOOLEAN NOT NULL,
+        compliment_cool INT NOT NULL,
+        compliment_funny INT NOT NULL,
+        compliment_hot INT NOT NULL,
+        compliment_list INT NOT NULL,
+        compliment_more INT NOT NULL,
+        compliment_photos INT NOT NULL,
+        compliment_plain INT NOT NULL,
+        compliment_profile INT NOT NULL,
+        compliment_writer INT NOT NULL,
+        -- not sure about this part
+        cool INT NOT NULL,
+        funny INT NOT NULL,
+        useful INT NOT NULL,
         PRIMARY KEY (Uid)
 );
 
@@ -36,8 +50,12 @@ CREATE TABLE BUSINESSES (
         Stars FLOAT NOT NULL,
         Review_count INT NOT NULL,
         Is_open BOOLEAN NOT NULL,
+        -- Attributes and categories to be specified how to deal with later???
         Category VARCHAR(100) NOT NULL,
-        PRIMARY KEY (Bid)
+        Attributes VARCHAR(1000) NOT NULL,
+        PRIMARY KEY (Bid),
+        Foreign Key (Category) REFERENCES CATEGORIES(Category),
+        Foreign Key (Attributes) REFERENCES ATTRIBUTES(Attributes)
 );
 
 CREATE TABLE CATEGORIES (
@@ -46,6 +64,8 @@ CREATE TABLE CATEGORIES (
         PRIMARY KEY (Bid),
         FOREIGN KEY (Bid) REFERENCES BUSINESSES(Bid)
 );
+
+
 
 CREATE TABLE SCHEDULE (
         Bid INT NOT NULL,
@@ -74,7 +94,16 @@ CREATE TABLE FRIENDS (
         FOREIGN KEY (Friend_uid) REFERENCES USERS(Uid)
 );
 
+
+CREATE TABLE ATTRIBUTES (
+        Bid INT NOT NULL,
+        Attributes VARCHAR(1000) NOT NULL,
+        PRIMARY KEY (Bid),
+        FOREIGN KEY (Bid) REFERENCES BUSINESSES(Bid)
+);
+
 """
+Check if this is really needed
 CREATE TABLE FANS (
         Uid INT NOT NULL,
         Fan_uid INT NOT NULL,
@@ -82,5 +111,3 @@ CREATE TABLE FANS (
         FOREIGN KEY (Fan_uid) REFERENCES USERS(Uid)
 );
 """
-
-

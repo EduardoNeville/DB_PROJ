@@ -22,17 +22,17 @@ Name: first name of the user
 Yelping_since: date when the user joined Yelp   
 Average_stars: average stars the user has received from other users for their reviews   
 Review_count: the number of reviews this user has written   
-Fans: the number of fans this user has   
+Fans_cont: the number of fans this user has   
 Elite: list of years in which this user has an elite status   
 Friends: list of friends, whose elements are the user_id of the friends (who are also users on Yelp).   
 Compliment_cool: the number of cool compliments this user has received   
-Compliment_funny: the number of funny compliments this user has received   
+Compliment_funny: the number of funny compliments this user has received  
 Compliment_hot: the number of hot compliments this user has received   
 Compliment_list: the number of list compliments this user has received   
 Compliment_more: the number of more compliments this user has received   
 Compliment_note: the number of note compliments this user has received   
-Compliment_photos: the number of photo compliments this user has received   
-Compliment_plain: the number of plain compliments this user has received   
+Compliment_photos: the number of photo compliments this user has received
+Compliment_plain: the number of plain compliments this user has received 
 Compliment_profile: the number of profile compliments this user has received   
 Compliment_writer: the number of writer compliments this user has received   
    
@@ -65,8 +65,9 @@ Text: the content of the review
 Tip_id: unique identifier for each tip   
 User_id: foreign key referencing the User entity, identifies the user who wrote the tip   
 Business_id: foreign key referencing the Business entity, identifies the business being tipped   
+Date: Date the tip was made
 Likes: number of likes received from other users for the tip   
-Text: the content of the tip   
+Text: the content of the tip 
    
 ### Category Entity:   
 Category_id: unique identifier for each category   
@@ -75,5 +76,10 @@ Name: name of the category
 ### Attribute Entity:   
 Attribute_id: unique identifier for each attribute   
 Name: name of the attribute   
+
+### Opening_hours:
+Day: what day they are open
+Opening: Opening hours
+Closing: Closing hours
    
-   
+
