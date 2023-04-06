@@ -1,13 +1,14 @@
+-- %%%%%%%%%%%%%%%%%%%%%
+
 -- Users table
 
 CREATE TABLE USERS (
         Uid INT NOT NULL AUTO_INCREMENT,
         Name VARCHAR(20) NOT NULL,
-        yelp_since DATE NOT NULL,
+        yelping_since VARCHAR(15) NOT NULL,
         average_stars FLOAT,
         review_count INT NOT NULL,
-        fans INT NOT NULL, -- TBD if this is the correct way maybe we find way to tell if fan
-
+        fans INT NOT NULL,
         compliment_cool INT,
         compliment_funny INT,
         compliment_hot INT, 
@@ -17,13 +18,16 @@ CREATE TABLE USERS (
         compliment_plain INT, 
         compliment_profile INT,
         compliment_writer INT,
-        -- not sure about this part
+
         cool INT,
         funny INT, 
         useful INT ,
         PRIMARY KEY (Uid)
 );
 
+-- Entities to support users
+
+-- Elite table
 CREATE TABLE ELITE(
         Uid INT NOT NULL,
         Year INT NOT NULL,
@@ -31,21 +35,53 @@ CREATE TABLE ELITE(
         FOREIGN KEY (Uid) REFERENCES USERS(Uid)
 );
 
+-- Friends table
+CREATE TABLE FRIENDS (
+        Uid INT NOT NULL,
+        Friend_uid INT NOT NULL,
+        PRIMARY KEY (Uid, Friend_uid),
+        FOREIGN KEY (Uid) REFERENCES USERS(Uid),
+        FOREIGN KEY (Friend_uid) REFERENCES USERS(Uid)
+);
+
+-- %%%%%%%%%%%%%%%%%%%%%
+
+-- Reviews table
+-- Weak entity
 CREATE TABLE REVIEWS (
-        Rid INT NOT NULL AUTO_INCREMENT,
+        Rid INT NOT NULL,
         Uid INT NOT NULL,
         Bid INT NOT NULL,
-        Stars INT NOT NULL,
-        Date DATE NOT NULL,
+        Stars INT,
+        Date VARCHAR(20) NOT NULL,
         Text VARCHAR(1000) NOT NULL,
-        USEFUL INT NOT NULL,
-        FUNNY INT NOT NULL,
-        COOL INT NOT NULL,
-        PRIMARY KEY (Rid),
+        USEFUL INT,
+        FUNNY INT,
+        COOL INT,
+        PRIMARY KEY (Rid, Uid, Bid),
         FOREIGN KEY (Uid) REFERENCES USERS(Uid),
         FOREIGN KEY (Bid) REFERENCES BUSINESSES(Bid)
 );
 
+-- %%%%%%%%%%%%%%%%%%%%%
+
+-- Tips table
+-- Weak entity
+CREATE TABLE TIPS (
+        Tid INT NOT NULL AUTO_INCREMENT,
+        Uid INT NOT NULL,
+        Bid INT NOT NULL,
+        Text VARCHAR(1000),
+        Date VARCHAR(20) NOT NULL,, 
+        Compliment_count INT, 
+        PRIMARY KEY (Tid, Uid, Bid),
+        FOREIGN KEY (Uid) REFERENCES USERS(Uid),
+        FOREIGN KEY (Bid) REFERENCES BUSINESSES(Bid)
+);
+
+-- %%%%%%%%%%%%%%%%%%%%%
+
+-- Business table 
 CREATE TABLE BUSINESSES (
         Bid INT NOT NULL AUTO_INCREMENT,
         Name VARCHAR(100) NOT NULL,
@@ -58,13 +94,7 @@ CREATE TABLE BUSINESSES (
         Longitude FLOAT NOT NULL,
         Stars FLOAT NOT NULL,
         Review_count INT NOT NULL,
-        Is_open BOOLEAN NOT NULL,
-        -- Attributes and categories to be specified how to deal with later???
-        Category VARCHAR(100) NOT NULL,
-        Attributes VARCHAR(1000) NOT NULL,
-        PRIMARY KEY (Bid),
-        Foreign Key (Category) REFERENCES CATEGORIES(Category),
-        Foreign Key (Attributes) REFERENCES ATTRIBUTES(Attributes)
+        PRIMARY KEY (Bid)
 );
 
 -- Categories of a business
@@ -73,8 +103,8 @@ CREATE TABLE BUSINESSES (
 
 CREATE TABLE CATEGORIES (
         Bid INT NOT NULL,
-        Category VARCHAR(100) NOT NULL,
-        PRIMARY KEY (Bid),
+        Category_name VARCHAR(100),
+        PRIMARY KEY (Bid, Category),
         FOREIGN KEY (Bid) REFERENCES BUSINESSES(Bid)
 );
 
@@ -88,29 +118,19 @@ CREATE TABLE SCHEDULES (
         FOREIGN KEY (Bid) REFERENCES BUSINESSES(Bid)
 );
 
-CREATE TABLE TIPS (
-        Tid INT NOT NULL AUTO_INCREMENT,
-        Uid INT NOT NULL,
+-- Attributes of the business
+-- Business has a 'ISA' relationship with them 
+CREATE TABLE ATTRIBUTES(
         Bid INT NOT NULL,
-        Text VARCHAR(1000),
-        Date DATE, 
-        Complement_count INT, 
-        PRIMARY KEY (Tid),
-        FOREIGN KEY (Uid) REFERENCES USERS(Uid),
+        -- e.g. 'Business_Parking' or 'Ambience' or 'NoiseLevel' or 'GoodForMeal' or 'Music' or 'DietaryRestrictions'
+        attribute_category VARCHAR(20),
+        -- Attributes of the category they are in eg. 'Business_Parking has 'garage' attribute 
+        attribute VARCHAR(20), 
+        PRIMARY KEY (Bid, attribute),
         FOREIGN KEY (Bid) REFERENCES BUSINESSES(Bid)
 );
 
-CREATE TABLE FRIENDS (
-        Uid INT NOT NULL,
-        Friend_uid INT NOT NULL,
-        PRIMARY KEY (Uid, Friend_uid)
-        FOREIGN KEY (Uid) REFERENCES USERS(Uid),
-        FOREIGN KEY (Friend_uid) REFERENCES USERS(Uid)
-);
-
-
--- Attributes of the business
--- Business has a 'ISA' relationship with them 
+/**
 
 CREATE TABLE BUSINESS_PARKING(
         Bid INT NOT NULL,
@@ -180,4 +200,8 @@ CREATE TABLE DIETARY_RESTRICTIONS(
         PRIMARY KEY (Bid),
         FOREIGN KEY (Bid) REFERENCES BUSINESSES(Bid)
 );
+
+**/
+
+
 
