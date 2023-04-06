@@ -49,6 +49,9 @@ A schedule is dependant of a business, so it is also a weak entity.
 <!-- At first, we hesitated to design attributes as an ISA relationaship. However, we choose a simpler form. All information is grouped in attributes table, which is weak. We could do that because there are at most 6 attributes possible for business. For example, for each attributes a business has, the table has a row looking like (bid, attributes_category, ) -->
 
 ## Data cleaning and transformation discussion
+
+TO DO
+
 If not an int => put a 0 
 Ignore non essential attributes that are null
 we used for adress, schedule, text of the tip, open and close time, etc CHARVAR to allow flexibility. 
