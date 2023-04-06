@@ -1,13 +1,16 @@
 # Introduction to database system : Deliverable 1
 
 ## Assumptions
-- 1) A business can have, the same day, several and overlaping opening hours. Eg an hotel can have the breakfeast starting at 7 and its pool opening at 8 
-- 2) Friends is not always reciprocal  (not always reciprocal)
-- 3) There are only 6 attributes to a business : business parking, good for meal, ambiance, noise level, music, dietary restrictions. 
-- 4) There are not a fixed number of category name 
+- 1) Friends is not always reciprocal  (not always reciprocal)
+- 2) A business can have, the same day, several and overlaping opening hours. Eg an hotel can have the breakfeast starting at 7 and its pool opening at 8 
+- 3) There are only 6 attributes to a business : business parking, good for meal, ambiance, noise level, music, dietary restrictions. We called these attributes categories
+- 4) There are not a reasonable fixed number of category name possible for a business
 - 5) In business hours, open now is not a relevant feature because it depends of the time data have been extracted
 - 6) A business could have no attributes
 - 7) A business could have no schedule
+
+
+
 
 ## Entity Relationship Schema
 
@@ -19,9 +22,13 @@
 Elite is associated to a user, so it is a weak regarding users table. 
 A tip is given by a user to a business, so it is weak regarding these two entities.
 Same reasoning for review table. 
-An schedule is dependant of a business, so it is also a weak entity. 
+A schedule is dependant of a business, so it is also a weak entity. 
 
-We splitted the weekly schedule of a busness into dayly schedules, to make it more exploitable. As a business could open and close twice in a day (eg a restaurant), we created an Schedule ID to identify each time slot. 
+The Friends table should be a many-to-many relationship, due to assumption 1
+
+We splitted the weekly schedule of a busness into dayly schedules, to make it more exploitable. As a business could open and close twice in a day (eg a restaurant), we created an Schedule ID to identify each time slot. This manages assumption 2.
+
+We didn't do a ISA for Category of a business because there are too many possibilities for each one (assumption 4)
 
 Assumptions 6 and 7 justifies the thin lines between business and 'has' linked to Attributes and Schedule tables
 
@@ -29,16 +36,12 @@ Assumptions 6 and 7 justifies the thin lines between business and 'has' linked t
 - Overlap constraint allowed (a busness can have several attributes like ambiance and noise level at the same time)
 - Covering constraint : no -->
 
-We didn't do a ISA for Category of a business because there are too many possibilities for each one (assumption 4)
-
-The Friends should be a many-to-many relationship, due to assumption 2
-
 ## Relational schema
 <!-- OLD WAY We choose to translate the ISA relationship by 6 tables. Each attribute has its own sub-attributes, mostly boolean as in the data. We also added 6 boolean values in business entity, to know wich attributes a business have. It is necessary, but it could make us save a lot of time further. For example, if we want to know wich attributes has a business, you would not have to scan all the 6 tables looking for a bid.  --> 
 
 Weak entities and their relationship table to their owner entity can be merged into one table in the RM, eg Was-Elite, Rates-Review, Gives-Tip, Has-Schedule
 
-For all entities, when a attribute is a key (usually a primary or foreign key), it has a condition NOT NULL. There are no condition on other non-necessary attribute.
+For all entities, when a attribute is a key (usually a primary or foreign key), it has a condition NOT NULL. There are no condition on other non-necessary attribute
 
 ATTRIBUTES table relates to what we called the 6 attributes categories of a business. Each of attribute category have several attributes. At first, we hesitated to design attributes as an ISA relationaship. However, we choose a simpler form. All information is grouped in ATTRIBUTES table, which is weak. For example, for each attribute a business has, the table has a row looking like (bid, attributes_category, attribute). As there is not twice the same attributes accross the 6 categories, (bid, attribute) can be the PK. This will design a very long table, but efficient for all type of query related to this.
 
