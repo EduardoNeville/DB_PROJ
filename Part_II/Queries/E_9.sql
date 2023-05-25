@@ -5,4 +5,4 @@ FROM (
     SELECT BUSINESS_ID, COUNT(*) AS category_count
     FROM BUSINESS_HAS_CATEGORIES
     GROUP BY BUSINESS_ID
-) AS business_category_counts;
+);
