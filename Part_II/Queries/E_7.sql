@@ -1,21 +1,18 @@
-
---1. Find the businesses (name, review_count) in the city of 
---'las vegas' that have 'valet' parking, 5 stars and are
---open on Friday. Order by the business name in alphabetical 
---order.
-
-SELECT B.business_name, B.review_count
-FROM BUSINESS B
-JOIN LOCATION L ON B.business_id = BL.business_id
-JOIN HOURS H ON B.business_id = BH.business_id
-JOIN WEEK_DAYS WD ON BH.day_id = WD.day_id
-JOIN PARKING P ON B.business_id = P.business_id
-WHERE 
-    L.city = 'las vegas'        AND 
-    WD.day_name = 'Friday'      AND 
-    P.parking_type = 'valet'    AND 
-    B.stars = 5
-ORDER BY B.business_name ASC;
-
-
+SELECT STATES.state_name as state_name, COALESCE(cts.ct, 0) as business_count
+FROM STATES
+LEFT JOIN 
+    (SELECT BUSINESS_LOCATION.STATE_NAME, COUNT(*) as ct
+    FROM BUSINESS_LOCATION
+    JOIN (SELECT DISTINCT BUSINESS_ID 
+        FROM business_dietary_restrictions
+        WHERE business_dietary_restrictions.DIETARY_REST_ID =(
+            SELECT DIETARY_REST_ID
+            FROM dietary_restrictions 
+            WHERE dietary_restrictions.dietary_rest_description = 'vegetarian'
+            )
+        ) VBs 
+    on BUSINESS_LOCATION.BUSINESS_ID = VBs.BUSINESS_ID
+    GROUP BY BUSINESS_LOCATION.STATE_NAME) cts
+on STATES.state_name = cts.STATE_NAME
+ORDER BY business_count DESC ;
 
