@@ -1,4 +1,4 @@
--- 7. Compute the difference between the average stars of businesses considered 'good for dinner' with a (1)
+-- Compute the difference between the average stars of businesses considered 'good for dinner' with a (1)
 -- "divey" and (2) an "upscale" ambience. Name the column of the result 'DIFFERENCE_OF_AVERAGES'
 
 SELECT

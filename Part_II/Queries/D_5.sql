@@ -1,4 +1,4 @@
--- 5. Find the average rating and the total number of reviews for all businesses which have a minimum of two
+-- Find the average rating and the total number of reviews for all businesses which have a minimum of two
 -- categories and more than one parking type. Return two columns (stars, review_count). 
 
 SELECT AVG(B.STARS) AS stars, SUM(B.REVIEW_COUNT) AS review_count
