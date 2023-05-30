@@ -8,7 +8,7 @@ FROM (
          RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_num
   FROM BUSINESS_LOCATION
   GROUP BY STATE_NAME
-) subquery
+) 
 WHERE rank_num <= 10;
 
 
