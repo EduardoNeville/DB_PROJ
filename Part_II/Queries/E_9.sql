@@ -1,4 +1,4 @@
--- 9. What is the maximum number of categories assigned to a business? Return one column "count"
+-- What is the maximum number of categories assigned to a business? Return one column "count"
 
 SELECT MAX(category_count) AS "count"
 FROM (

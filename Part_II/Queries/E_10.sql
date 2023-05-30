@@ -1,4 +1,4 @@
--- 10. How many businesses labeled as "Dry Cleaners" are open on the weekend? Return one column "count"
+-- How many businesses labeled as "Dry Cleaners" are open on the weekend? Return one column "count"
 
 SELECT COUNT(DISTINCT B.BUSINESS_ID) AS "count"
 FROM BUSINESS B

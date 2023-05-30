@@ -5,12 +5,13 @@
 -- Order the results in descending order according to the number of reviews
 
 SELECT B.business_id, B.business_name, B.review_count FROM BUSINESS B
-JOIN DIETARY D ON B.business_id = D.business_id
+JOIN business_dietary_restrictions D ON B.business_id = D.business_id
 WHERE 
     B.review_count > 3000
 GROUP BY B.business_id, B.business_name, B.review_count
-HAVING COUNT(D.dietary_id) > 2
+HAVING COUNT(D.dietary_rest_id) > 2
 ORDER BY B.review_count DESC;
+
 
 
 
