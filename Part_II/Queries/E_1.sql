@@ -10,7 +10,7 @@ JOIN BUSINESS_HOURS BH ON B.business_id = BH.business_id
 JOIN DAY_OF_WEEK WD ON BH.day_id = WD.day_id
 JOIN BUSINESS_PARKING_TYPE BP ON BP.business_id = P.business_id
 WHERE 
-    L.city_name = 'las vegas'        AND 
+    CONTAINS(L.city_name = 'las vegas')        AND 
     WD.day_name = 'Friday'      AND 
     P.parking_type_description = 'valet'    AND 
     B.stars = 5
