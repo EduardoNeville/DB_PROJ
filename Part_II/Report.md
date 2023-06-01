@@ -71,7 +71,6 @@ Result:
 
 ![Result E3](Query_results/Result_E3.png)
 
-
 QUERY E_4:
 
 Description of logic: 
@@ -98,8 +97,6 @@ ORDER BY B.review_count DESC;
 Result: 
 
 ![Result E4](Query_results/Result_E4.png)
-
-
 
 QUERY E_5:
 
@@ -186,7 +183,6 @@ Result:
 
 ![Result E7](Query_results/Result_E7.png)
 
-
 QUERY E_8:
 
 Description of logic: 
@@ -215,8 +211,6 @@ QUERY E_9:
 
 Description of logic: 
     Result colum: Count
-
-
 
 SQL statement:
 ```sql
