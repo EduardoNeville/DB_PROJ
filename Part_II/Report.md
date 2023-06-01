@@ -77,6 +77,18 @@ We first need to count, for each user, the number of businesses they reviewed. T
 More precisely, we have an sub query on the table REVIEWS that counts for each user, the number of distinct businesses they reviewed. Then we simply select the maximum of these counts. 
 
 SQL statement:
+``` sql
+SELECT max(rv_ct_usr) as count
+From (
+    SELECT user_id, count( distinct BUsiness_id) as rv_ct_usr
+    From REVIEWS
+    GROUP BY user_id
+);
+```
+
+Result:
+
+![Result E6](Query_results/Result_E6.png)
 
 QUERY E_7:
 
@@ -91,6 +103,28 @@ We finally join with all states in STATES (on STATE_NAME) so that states that do
 
 
 SQL statement:
+``` sql
+SELECT STATES.state_name as state_name, COALESCE(cts.ct, 0) as business_count
+FROM STATES
+LEFT JOIN 
+    (SELECT BUSINESS_LOCATION.STATE_NAME, COUNT(*) as ct
+    FROM BUSINESS_LOCATION
+    JOIN (SELECT DISTINCT BUSINESS_ID 
+        FROM business_dietary_restrictions
+        WHERE business_dietary_restrictions.DIETARY_REST_ID =(
+            SELECT DIETARY_REST_ID
+            FROM dietary_restrictions 
+            WHERE dietary_restrictions.dietary_rest_description = 'vegetarian'
+            )
+        ) VBs 
+    on BUSINESS_LOCATION.BUSINESS_ID = VBs.BUSINESS_ID
+    GROUP BY BUSINESS_LOCATION.STATE_NAME) cts
+on STATES.state_name = cts.STATE_NAME
+ORDER BY business_count DESC ;
+```
+Result:
+
+![Result E7](Query_results/Result_E7.png)
 
 
 QUERY E_8:
@@ -99,6 +133,23 @@ Description of logic:
 We first count by BUSINESS_ID in BUSINESS_HAS_CATEGORIES. Then we join with all BUSINESS (on BUSINESS_ID) so that businesses with no category still appear and with count 0. Then we simply apply the min, max, avg, and median functions. 
 
 SQL statement:
+```sql
+SELECT min(ct) as min_categories, max(ct) as max_categories, 
+AVG(ct) as mean_categories, MEDIAN(ct) as median_categories
+FROM 
+    (SELECT COALESCE(BCs_ct.ct, 0) as ct
+    FROM (BUSINESS
+    LEFT JOIN
+        (SELECT BUSINESS_ID, COUNT(*) as ct
+        FROM business_has_categories
+        GROUP BY business_id) BCs_ct
+        on business.business_id = BCs_ct.business_id)
+        ) ;
+```
+
+Result:
+
+![Result E8](Query_results/Result_E8.png)
 
 QUERY E_9:
 
@@ -248,8 +299,19 @@ Description of logic:
 
 SQL statement:
 ```sql
-
+SELECT STATE_NAME as state_name, n_b as num_businesses
+FROM (
+  SELECT STATE_NAME, COUNT(*) AS n_b,
+         RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_num
+  FROM BUSINESS_LOCATION
+  GROUP BY STATE_NAME
+) 
+WHERE rank_num <= 10;
 ```
+
+Results :
+
+![Result D10](Query_results/Result_D10.png)
 
 
 
