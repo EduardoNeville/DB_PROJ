@@ -254,7 +254,7 @@ WHERE RG.city_name NOT IN (
     WHERE EXISTS (SELECT Business_id 
     FROM Business Bs
     WHERE bs.business_id = bl.business_id and bs.review_count < 2  
-    ) 
+    ) --cities with businesses having less then two reviews
 ) ORDER BY city_name 
 FETCH FIRST 50 ROWS ONLY;
 ```
@@ -370,7 +370,10 @@ SQL statement:
 ```
 
 
-Optimization
+Optimization with indexing :
+
+QUERY D4 :
+
 
 
 
