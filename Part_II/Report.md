@@ -9,8 +9,18 @@ The DATA is somehow clean (no duplicate…)
 #### QUERY E_1:
 
 Description of logic: 
+    Return columns: Business_name, Business_review_count 
 
 SQL statement:
+    
+We joined the BUSINESS table with the BUSINESS_NAME and the BUSINESS_HOURS tables using the business_id.
+Then joining it with the DAY_OF_WEEK table using the day_id of the BUSINESS_HOURS.
+We then joined this table with the BUSINESS_PARKING_TYPE
+We then filterd the table by:
+Location name containing las vegas,
+Working on a Friday,
+Has a valet, and
+Has 5 stars
 
 #### QUERY E_2:
 
@@ -71,7 +81,7 @@ Result:
 
 ![Result E3](Query_results/Result_E3.png)
 
-QUERY E_4:
+#### QUERY E_4:
 
 Description of logic: 
     Result: Business_id, Business_name, Review_count
@@ -98,7 +108,7 @@ Result:
 
 ![Result E4](Query_results/Result_E4.png)
 
-QUERY E_5:
+#### QUERY E_5:
 
 Description of logic: 
 
@@ -124,7 +134,7 @@ Result:
 ![Result E5_1](Query_results/Result_E5_1.png)
 ![Result E5_2](Query_results/Result_E5_2.png)
 
-QUERY E_6:
+#### QUERY E_6:
 
 Description of logic: 
 
@@ -147,7 +157,7 @@ Result:
 
 ![Result E6](Query_results/Result_E6.png)
 
-QUERY E_7:
+#### QUERY E_7:
 
 Description of logic: 
 We first find the DIETARY_REST_ID corresponding to. ‘vegetarian’, then we find all the businesses with this DIETARY_REST_ID, we count, by states, these businesses and adding the states which do not have such restaurant (setting the count to 0).
@@ -183,7 +193,7 @@ Result:
 
 ![Result E7](Query_results/Result_E7.png)
 
-QUERY E_8:
+#### QUERY E_8:
 
 Description of logic: 
 We first count by BUSINESS_ID in BUSINESS_HAS_CATEGORIES. Then we join with all BUSINESS (on BUSINESS_ID) so that businesses with no category still appear and with count 0. Then we simply apply the min, max, avg, and median functions. 
@@ -207,7 +217,7 @@ Result:
 
 ![Result E8](Query_results/Result_E8.png)
 
-QUERY E_9:
+#### QUERY E_9:
 
 Description of logic: 
     Result colum: Count
@@ -228,7 +238,8 @@ Result:
 ![Result E9](Query_results/Result_E9.png)
 
 
-QUERY E_10:
+#### QUERY E_10:
+
 
 Description of logic: 
 
@@ -238,7 +249,7 @@ SQL statement:
 General Comments
 <In this section write general comments about your deliverable (comments and work allocation between team members>
 
-QUERY D_1:
+#### QUERY D_1:
 
 Description of logic: 
 Fisrt we find the business that work more or exactly 5 days a week. Then we find the cities which contain at least one business that work more or exactly 5 days a week. In the end we select all the cities but the one which appeared in the previous table.
@@ -271,7 +282,7 @@ Results :
 ![Result D1](Query_results/Result_D1.png)
 
 
-QUERY D_2:
+#### QUERY D_2:
 
 Description of logic: 
 We count each occurence of each state_name in the business_location table, then use the RANK() and ORDER function to retrieve the 10 most occuring state_name.
@@ -293,7 +304,7 @@ Results :
 ![Result D2](Query_results/Result_D2.png)
 
 
-QUERY D_3:
+#### QUERY D_3:
 
 Description of logic: 
 
@@ -311,7 +322,7 @@ AND M.MUSIC_DESCRIPTION = 'live'
 ORDER BY B.BUSINESS_NAME ASC;
 ```
 
-QUERY D_4:
+#### QUERY D_4:
 
 Description of logic: 
 We first find businesses with less than 2 reviews. Then we select cities which have at least one of these businesses. In the end we link all the cities so that cities with no business do apear adn filter out cities that were slected in the previous sentence.
@@ -339,7 +350,7 @@ Result:
 
 ![Result D4](Query_results/Result_D4.png)
 
-QUERY D_5:
+#### QUERY D_5:
 
 Description of logic: 
 
@@ -361,7 +372,7 @@ AND B.BUSINESS_ID IN (
 );
 ```
 
-QUERY D_6:
+#### QUERY D_6:
 
 Description of logic: 
 First we store all the positive_tips, the we select all user thast fulfill the "yestersay condition". Then for each business_id, we check if there is a user who left a tip and who is not the user fulfilling the condition.
@@ -395,7 +406,7 @@ Results:
 
 ![Result D6](Query_results/Result_D6.png)
 
-QUERY D_7:
+#### QUERY D_7:
 
 Description of logic: 
 
@@ -424,7 +435,7 @@ SELECT
   ) AS DIFFERENCE_OF_AVERAGES
 FROM DUAL;
 ```
-QUERY D_8:
+#### QUERY D_8:
 
 Description of logic: 
 
@@ -432,7 +443,7 @@ SQL statement:
 ```sql
 
 ```
-QUERY D_9:
+#### QUERY D_9:
 
 Description of logic: 
 
@@ -441,7 +452,7 @@ SQL statement:
 
 ```
 
-QUERY D_10:
+#### QUERY D_10:
 
 Description of logic: 
 

@@ -1,5 +1,5 @@
-- E01 x <- TODO
-- E10 o <- Nothing done 
+- E01 x <- TODO check possible fixes
+- E10 o <- Nothing done (possible fix [Line: 8]: Remove Dry Cleaning & Laundry)
 - D03 v <-  Result and write down notes
 - D05 v <-  Result and write down notes 
 - D07 v <-  Result and write down notes
