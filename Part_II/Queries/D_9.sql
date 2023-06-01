@@ -9,16 +9,22 @@
 -- Order the results by business id in alphabetical order, 
 -- and then rank (1 - 3)
 
-SELECT
-    B.business_id,
-    RANK() OVER (
-        PARTITION BY B.business_id 
-        ORDER BY COUNT(R.review_id) DESC
-        ) AS reviewer_rank,
-    COUNT(R.review_id) AS review_count
-FROM BUSINESS B
-JOIN REVIEWS R ON B.business_id = R.business_id
-GROUP BY B.business_id, R.user_id
-ORDER BY B.business_id ASC, reviewer_rank ASC
-FETCH FIRST 30 ROWS ONLY;
+WITH top_10_businesses AS (
+    SELECT business_id, ROW_NUMBER() OVER (ORDER BY review_count DESC) AS r
+    FROM Business
+    WHERE ROWNUM <= 10
+),
+reviewer_rankings AS (
+    SELECT r.business_id, u.user_id, u.review_count, ROW_NUMBER() OVER (PARTITION BY r.business_id ORDER BY u.review_count DESC) AS rank
+    FROM Reviews r
+    INNER JOIN User_Yelp u ON r.user_id = u.user_id
+    INNER JOIN top_10_businesses t ON r.business_id = t.business_id
+)
+SELECT business_id, rank AS reviewer_rank, review_count
+FROM reviewer_rankings
+WHERE rank <= 3
+ORDER BY business_id, reviewer_rank;
+
+
+
 

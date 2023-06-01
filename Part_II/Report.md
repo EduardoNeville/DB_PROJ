@@ -307,8 +307,9 @@ Results :
 #### QUERY D_3:
 
 Description of logic: 
-
+    Result: Business_name, stars, review_count
 SQL statement:
+ It selects the business name, star rating, and review count from the "BUSINESS" table. It joins this table with the "BUSINESS_HAS_CATEGORIES" table, "BUSINESS_CATEGORIES" table, "BUSINESS_MUSIC" table, and "MUSIC" table to incorporate additional details about categories and music. The query filters the results to include businesses categorized as "Irish Pub" and offering "live" music. The final result is sorted in ascending order based on the business name.
 
 ```sql
 SELECT B.BUSINESS_NAME, B.STARS, B.REVIEW_COUNT -- , BC.CATEGORY_NAME, M.MUSIC_DESCRIPTION
@@ -321,6 +322,10 @@ WHERE BC.CATEGORY_NAME = 'Irish Pub'
 AND M.MUSIC_DESCRIPTION = 'live'
 ORDER BY B.BUSINESS_NAME ASC;
 ```
+
+Result:
+
+![Result D3](Query_results/Result_D3.png)
 
 #### QUERY D_4:
 
@@ -353,6 +358,7 @@ Result:
 #### QUERY D_5:
 
 Description of logic: 
+It selects the average of the "STARS" column and the sum of the "REVIEW_COUNT" column from the "BUSINESS" table. The query filters the results to include businesses whose IDs are present in the subquery result where the "BUSINESS_HAS_CATEGORIES" table is grouped by "BUSINESS_ID" and having a count greater than or equal to 2. Additionally, it further filters the results to include businesses whose IDs are present in another subquery result where the "BUSINESS_PARKING_TYPE" table is grouped by "BUSINESS_ID" and having a count greater than 1. The query calculates these aggregations for the qualifying businesses.
 
 SQL statement:
 ```sql
@@ -371,6 +377,11 @@ AND B.BUSINESS_ID IN (
     HAVING COUNT(*) > 1
 );
 ```
+
+Result:
+
+![Result D5](Query_results/Result_D5.png)
+
 
 #### QUERY D_6:
 
@@ -410,6 +421,12 @@ Results:
 
 Description of logic: 
 
+The first subquery selects the average stars from the "BUSINESS" table, joined with the "BUSINESS_GOOD_FOR_MEAL", "GOOD_FOR_MEAL", "BUSINESS_AMBIANCE", and "AMBIANCE" tables. It filters the results to include businesses that are good for dinner ("GOOD_FOR_MEAL_DESCRIPTION = 'dinner'") and have a divey ambiance ("AMBIANCE_DESCRIPTION = 'divey'").
+
+The second subquery follows the same structure as the first but filters for businesses that are good for dinner ("GOOD_FOR_MEAL_DESCRIPTION = 'dinner'") and have an upscale ambiance ("AMBIANCE_DESCRIPTION = 'upscale'").
+
+The main query subtracts the average stars from the second subquery from the average stars from the first subquery and aliases the result as "DIFFERENCE_OF_AVERAGES". The result represents the difference in average stars between businesses with a divey ambiance and businesses with an upscale ambiance that are good for dinner. The query is executed against the "DUAL" table
+
 SQL statement:
 ```sql
 SELECT
@@ -435,6 +452,11 @@ SELECT
   ) AS DIFFERENCE_OF_AVERAGES
 FROM DUAL;
 ```
+
+Result:
+
+![Result D7](Query_results/Result_D7.png)
+
 #### QUERY D_8:
 
 Description of logic: 

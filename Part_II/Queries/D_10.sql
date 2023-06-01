@@ -8,13 +8,26 @@
 -- the number of reviews (as review_count) and 
 -- the city name (as city_name).
 
-SELECT SUM(B.review_count) AS review_count
-FROM BUSINESS B 
-JOIN REVIEW R ON B.business_id = R.business_id
-WHERE 
-    R.user_id IN (
-        SELECT user_id FROM USER WHERE friend_count < 3)
-GROUP BY B.city
-ORDER BY review_count ASC
-LIMIT 1;
+WITH city_reviews AS (
+    SELECT bl.city_name AS city, COUNT(r.review_id) AS reviews
+    FROM Reviews r
+    INNER JOIN User_Yelp u ON r.user_id = u.user_id
+    INNER JOIN (
+        SELECT user_id
+        FROM Friends
+        GROUP BY user_id
+        HAVING COUNT(friends_id) < 3
+    ) f ON u.user_id = f.user_id
+    INNER JOIN Business_location bl ON r.business_id = bl.business_id
+    GROUP BY bl.city_name
+),
+min_reviews AS (
+    SELECT MIN(reviews) AS min_reviews
+    FROM city_reviews
+)
+SELECT reviews AS review_count, city AS city_name
+FROM city_reviews
+WHERE reviews = (SELECT min_reviews FROM min_reviews)
+ORDER BY city
+FETCH FIRST ROW ONLY;
 
