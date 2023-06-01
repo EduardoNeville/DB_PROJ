@@ -14,7 +14,7 @@ user_yesterday AS (
     JOIN positive_tips pt2 ON pt1.USER_ID = pt2.USER_ID AND TO_DATE(pt1.TIP_DATE, 'DD-MON-RR') - 1 = TO_DATE(pt2.TIP_DATE, 'DD-MON-RR')
 )
 SELECT count(distinct Business_ID) as count 
-FROM positive_tips bs
+FROM business bs
 WHERE NOT EXISTS (
     SELECT pt.USER_ID
     FROM positive_tips pt
