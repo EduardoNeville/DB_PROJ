@@ -7,14 +7,14 @@
 WITH positive_tips AS (
     SELECT USER_ID, BUSINESS_ID, TIP_DATE
     FROM TIPS
-    WHERE TIP_TEXT LIKE '%awesome'),
+    WHERE LOWER(TIP_TEXT) LIKE '%awesome%'),
 user_yesterday AS (
     SELECT DISTINCT pt1.USER_ID
     FROM positive_tips pt1
     JOIN positive_tips pt2 ON pt1.USER_ID = pt2.USER_ID AND TO_DATE(pt1.TIP_DATE, 'DD-MON-RR') - 1 = TO_DATE(pt2.TIP_DATE, 'DD-MON-RR')
 )
-SELECT count(Business_ID) as count 
-FROM BUSINESS bs
+SELECT count(distinct Business_ID) as count 
+FROM positive_tips bs
 WHERE NOT EXISTS (
     SELECT pt.USER_ID
     FROM positive_tips pt

@@ -2,17 +2,17 @@
 -- a week. List only the names of the cities (city_name) and 
 -- sort the results in alphabetical order.
 
-SELECT DISTINCT L.city FROM BUSINESS_LOCATION L
-JOIN BUSINESS B ON L.location_id = B.location_id
-JOIN BUSINESS_HOURS H ON B.business_id = H.business_id
-WHERE H.day IN (
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday') 
-GROUP BY L.city
-HAVING COUNT(DISTINCT H.day) < 5
-ORDER BY L.city ASC;
+WITH BM5 AS (SELECT distinct Business_id
+    FROM BUSINESS_HOURS
+    GROUP BY Business_id
+    HAVING COUNT(DISTINCT DAY_ID) >= 5
+    ),--Businesses working more than or exaclty 5 days a week
+CT5 AS (SELECT distinct BL.city_name
+    FROM BUSINESS_LOCATION BL
+    RIGHT JOIN BM5
+on bl.business_id = BM5.business_id) -- cities with businesses working more than or exaclty 5 days a week 
+SELECT cti.city_name 
+FROM CITIES cti
+LEFT JOIN CT5
+on cti.city_name = ct5.city_name
+WHERE ct5.city_name IS NULL;

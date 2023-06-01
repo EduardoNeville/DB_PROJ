@@ -6,4 +6,4 @@ From (
     SELECT user_id, count( distinct BUsiness_id) as rv_ct_usr
     From REVIEWS
     GROUP BY user_id
-)
+);

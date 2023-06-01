@@ -77,6 +77,18 @@ We first need to count, for each user, the number of businesses they reviewed. T
 More precisely, we have an sub query on the table REVIEWS that counts for each user, the number of distinct businesses they reviewed. Then we simply select the maximum of these counts. 
 
 SQL statement:
+``` sql
+SELECT max(rv_ct_usr) as count
+From (
+    SELECT user_id, count( distinct BUsiness_id) as rv_ct_usr
+    From REVIEWS
+    GROUP BY user_id
+);
+```
+
+Result:
+
+![Result E6](Query_results/Result_E6.png)
 
 QUERY E_7:
 
@@ -91,6 +103,28 @@ We finally join with all states in STATES (on STATE_NAME) so that states that do
 
 
 SQL statement:
+``` sql
+SELECT STATES.state_name as state_name, COALESCE(cts.ct, 0) as business_count
+FROM STATES
+LEFT JOIN 
+    (SELECT BUSINESS_LOCATION.STATE_NAME, COUNT(*) as ct
+    FROM BUSINESS_LOCATION
+    JOIN (SELECT DISTINCT BUSINESS_ID 
+        FROM business_dietary_restrictions
+        WHERE business_dietary_restrictions.DIETARY_REST_ID =(
+            SELECT DIETARY_REST_ID
+            FROM dietary_restrictions 
+            WHERE dietary_restrictions.dietary_rest_description = 'vegetarian'
+            )
+        ) VBs 
+    on BUSINESS_LOCATION.BUSINESS_ID = VBs.BUSINESS_ID
+    GROUP BY BUSINESS_LOCATION.STATE_NAME) cts
+on STATES.state_name = cts.STATE_NAME
+ORDER BY business_count DESC ;
+```
+Result:
+
+![Result E7](Query_results/Result_E7.png)
 
 
 QUERY E_8:
@@ -99,6 +133,23 @@ Description of logic:
 We first count by BUSINESS_ID in BUSINESS_HAS_CATEGORIES. Then we join with all BUSINESS (on BUSINESS_ID) so that businesses with no category still appear and with count 0. Then we simply apply the min, max, avg, and median functions. 
 
 SQL statement:
+```sql
+SELECT min(ct) as min_categories, max(ct) as max_categories, 
+AVG(ct) as mean_categories, MEDIAN(ct) as median_categories
+FROM 
+    (SELECT COALESCE(BCs_ct.ct, 0) as ct
+    FROM (BUSINESS
+    LEFT JOIN
+        (SELECT BUSINESS_ID, COUNT(*) as ct
+        FROM business_has_categories
+        GROUP BY business_id) BCs_ct
+        on business.business_id = BCs_ct.business_id)
+        ) ;
+```
+
+Result:
+
+![Result E8](Query_results/Result_E8.png)
 
 QUERY E_9:
 
@@ -123,6 +174,32 @@ SQL statement:
 General Comments
 <In this section write general comments about your deliverable (comments and work allocation between team members>
 
+QUERY D_1:
+
+Description of logic: 
+
+SQL statement:
+```sql
+WITH BM5 AS (SELECT distinct Business_id
+    FROM BUSINESS_HOURS
+    GROUP BY Business_id
+    HAVING COUNT(DISTINCT DAY_ID) >= 5
+    ),--Businesses working more than or exaclty 5 days a week
+CT5 AS (SELECT distinct BL.city_name
+    FROM BUSINESS_LOCATION BL
+    RIGHT JOIN BM5
+on bl.business_id = BM5.business_id) -- cities with businesses working more than or exaclty 5 days a week 
+SELECT cti.city_name 
+FROM CITIES cti
+LEFT JOIN CT5
+on cti.city_name = ct5.city_name
+WHERE ct5.city_name IS NULL;
+```
+
+Results :
+
+![Result D1](Query_results/Result_d1.png)
+
 
 QUERY D_2:
 
@@ -139,6 +216,11 @@ FROM (
 ) 
 WHERE rank_num <= 10;
 ```
+
+Results :
+
+![Result D2](Query_results/Result_D2.png)
+
 
 QUERY D_3:
 
@@ -164,8 +246,23 @@ Description of logic:
 
 SQL statement:
 ```sql
-
+SELECT distinct RG.city_name as city_name
+FROM REGIONS RG
+WHERE RG.city_name NOT IN ( 
+    SELECT distinct BL.city_name
+    FROM BUSINESS_LOCATION BL
+    WHERE EXISTS (SELECT Business_id 
+    FROM Business Bs
+    WHERE bs.business_id = bl.business_id and bs.review_count < 2  
+    ) 
+) ORDER BY city_name 
+FETCH FIRST 50 ROWS ONLY;
 ```
+
+Result:
+
+![Result D4](Query_results/Result_D4.png)
+
 QUERY D_5:
 
 Description of logic: 
@@ -194,8 +291,29 @@ Description of logic:
 
 SQL statement:
 ```sql
-
+WITH positive_tips AS (
+    SELECT USER_ID, BUSINESS_ID, TIP_DATE
+    FROM TIPS
+    WHERE LOWER(TIP_TEXT) LIKE '%awesome%'),
+user_yesterday AS (
+    SELECT DISTINCT pt1.USER_ID
+    FROM positive_tips pt1
+    JOIN positive_tips pt2 ON pt1.USER_ID = pt2.USER_ID AND TO_DATE(pt1.TIP_DATE, 'DD-MON-RR') - 1 = TO_DATE(pt2.TIP_DATE, 'DD-MON-RR')
+)
+SELECT count(distinct Business_ID) as count 
+FROM positive_tips bs
+WHERE NOT EXISTS (
+    SELECT pt.USER_ID
+    FROM positive_tips pt
+    WHERE bs.BUSINESS_ID = pt.business_id
+    AND pt.USER_ID NOT IN (SELECT USER_ID FROM user_yesterday)
+);
 ```
+
+Results: 
+
+![Result D6](Query_results/Result_D6.png)
+
 QUERY D_7:
 
 Description of logic: 
@@ -252,6 +370,7 @@ SQL statement:
 ```
 
 
+Optimization
 
 
 
