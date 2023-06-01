@@ -210,6 +210,7 @@ Results :
 QUERY D_2:
 
 Description of logic: 
+We count each occurence of each state_name in the business_location table, then use the RANK() and ORDER function to retrieve the 10 most occuring state_name.
 
 SQL statement:
 ```sql
