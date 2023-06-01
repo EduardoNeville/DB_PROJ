@@ -3,56 +3,85 @@ Deliverable 2 <br>
 Assumptions <br>
 <In this section write down the assumptions you made about the data, if any. Write a sentence for each assumption you made>
 The DATA is somehow clean (no duplicate…)
-### DDL 
-<In this section write down the DDL you wrote for implementing the provided ER model>
-Query Implementation
-<For each query>
-Query a: 
-Description of logic:
-<What does the query do and how do I decide to solve it>
-SQL statement
-<The SQL statement>
-Query result (if the result is big, just a snippet)
-<The SQL statement result>
+### DDL Section
 
-QUERY E_1:
+#### QUERY E_1:
 
 Description of logic: 
 
 SQL statement:
 
-QUERY E_2:
+#### QUERY E_2:
 
 Description of logic: 
+
+    Return columns:  Business_name, Business_stars
+
+From the Business table we map the BUSINESS_ID to match the BUSINESS_ID from BUSINESS_LOCATION and filter by STATE_NAME
+We then order by Stars in descending order, in case of tie we decide with the BUSINESS_NAME in alphabetical order.
 
 SQL statement:
 
 ~~~~ sql
 SELECT B.BUSINESS_NAME, B.STARS
-FROM BUSINESS B
-JOIN BUSINESS_LOCATION BL ON B.BUSINESS_ID = BL.BUSINESS_ID
-WHERE BL.STATE_NAME = 'CA'
+FROM (
+    SELECT BUSINESS_ID, BUSINESS_NAME, STARS
+    FROM BUSINESS
+    WHERE BUSINESS_ID IN (
+        SELECT BUSINESS_ID
+        FROM BUSINESS_LOCATION
+        WHERE STATE_NAME = 'CA'
+    )
+) B
 ORDER BY B.STARS DESC, B.BUSINESS_NAME ASC
 FETCH FIRST 10 ROWS ONLY;
 ~~~~
 
-QUERY E_3:
+Result:
+
+![Result E2](Query_results/Result_E2.png)
+
+#### QUERY E_3:
 
 Description of logic: 
 
+    Result columns: Business_id
+
 SQL statement:
 
+We join the business table with a filtered table of reviews using the BUSINESS_ID. 
+The filtered table groups businesses filtering themto have higher than 1030 distinct reviews.
+We then order the this table in ascending order 
+
+
 ``` sql
-SELECT B.business_id FROM BUSINESS B
-JOIN REVIEWS R ON B.business_id = R.business_id -- Inner join?
-GROUP BY B.business_id
-HAVING COUNT(DISTINCT R.user_id) > 1030
+SELECT B.business_id
+FROM BUSINESS B
+JOIN (
+    SELECT business_id
+    FROM REVIEWS
+    GROUP BY business_id
+    HAVING COUNT(DISTINCT user_id) > 1030
+) R ON B.business_id = R.business_id
 ORDER BY B.business_id ASC;
 ```
+
+Result:
+
+![Result E3](Query_results/Result_E3.png)
+
 
 QUERY E_4:
 
 Description of logic: 
+    Result: Business_id, Business_name, Review_count
+
+Joins two tables using business_id.
+The first being the business table 
+The second being a filtered version of the dietary restions table 
+Counting how many dietary restrictions does each business have. If they have more than 2 they are added to the table.
+We then filter to only have businesses with more that 3000 reviews.
+And order them descending according to review count
 
 SQL statement:
 ``` sql
@@ -64,15 +93,45 @@ GROUP BY B.business_id, B.business_name, B.review_count
 HAVING COUNT(D.dietary_rest_id) > 2
 ORDER BY B.review_count DESC;
 ```
+
+Result: 
+
+![Result E4](Query_results/Result_E4.png)
+
+
+
 QUERY E_5:
 
 Description of logic: 
 
+    Returns: User_ID, User_name, Yelping_since
+
+We are searching for users with single character usernames that joined Yelp before 2007. To do so we use a fileter on the date of the users signup date and search for a Username with a substring of one character that doesn't have another substring with one character. We then order them alphabetically and return the first 50 users.
+
 SQL statement:
+
+``` sql
+SELECT U.user_id, U.user_name, U.yelping_since
+FROM User_Yelp U
+WHERE 
+    U.yelping_since <= DATE '2006-12-31' AND
+    SUBSTR(U.user_name, 1, 1) IS NOT NULL AND
+    SUBSTR(U.user_name, 2) IS NULL 
+ORDER BY U.user_name ASC
+FETCH FIRST 50 ROWS ONLY;
+```
+
+Result: 
+
+![Result E5_1](Query_results/Result_E5_1.png)
+![Result E5_2](Query_results/Result_E5_2.png)
 
 QUERY E_6:
 
 Description of logic: 
+
+    Result column: Count
+
 We first need to count, for each user, the number of businesses they reviewed. Then we simply compute the max of these counts. 
 More precisely, we have an sub query on the table REVIEWS that counts for each user, the number of distinct businesses they reviewed. Then we simply select the maximum of these counts. 
 
@@ -154,6 +213,9 @@ Result:
 QUERY E_9:
 
 Description of logic: 
+    Result colum: Count
+
+
 
 SQL statement:
 ```sql
@@ -164,6 +226,10 @@ FROM (
     GROUP BY BUSINESS_ID
 );
 ```
+
+Result: 
+
+
 QUERY E_10:
 
 Description of logic: 
@@ -198,7 +264,7 @@ WHERE ct5.city_name IS NULL;
 
 Results :
 
-![Result D1](Query_results/Result_d1.png)
+![Result D1](Query_results/Result_D1.png)
 
 
 QUERY D_2:

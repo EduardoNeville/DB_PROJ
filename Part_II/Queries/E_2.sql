@@ -3,9 +3,15 @@
 -- to the number of stars, and break tie by the business names in alphabetical order.
 -- Note that states are stored by their abbreviation.
 
-SELECT B.BUSINESS_NAME as business_name, B.STARS as stars
-FROM BUSINESS B
-JOIN BUSINESS_LOCATION BL ON B.BUSINESS_ID = BL.BUSINESS_ID
-WHERE BL.STATE_NAME = 'CA'
+SELECT B.BUSINESS_NAME, B.STARS
+FROM (
+    SELECT BUSINESS_ID, BUSINESS_NAME, STARS
+    FROM BUSINESS
+    WHERE BUSINESS_ID IN (
+        SELECT BUSINESS_ID
+        FROM BUSINESS_LOCATION
+        WHERE STATE_NAME = 'CA'
+    )
+) B
 ORDER BY B.STARS DESC, B.BUSINESS_NAME ASC
 FETCH FIRST 10 ROWS ONLY;

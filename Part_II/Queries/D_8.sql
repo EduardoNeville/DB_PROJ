@@ -4,7 +4,7 @@
 -- combined number of reviews for the rest of the businesses
 -- in the city. Return one column 'city'.
 
-SELECT L.city FROM LOCATION L
+SELECT L.city FROM BUSINESS_LOCATION L
 JOIN BUSINESS B ON L.business_id = B.business_id
 JOIN REVIEW R ON B.business_id = R.business_id
 WHERE
@@ -13,6 +13,7 @@ WHERE
         JOIN REVIEW R ON B.business_id = R.business_id
         GROUP BY B.BUSINESS
         -- Filtering to only top 100 businesses
+        -- in terms of review count
         ORDER BY COUNT(R.review_id) DESC
         LIMIT 100
     )
