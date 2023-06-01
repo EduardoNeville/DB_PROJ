@@ -3,17 +3,7 @@ Deliverable 2 <br>
 Assumptions <br>
 <In this section write down the assumptions you made about the data, if any. Write a sentence for each assumption you made>
 The DATA is somehow clean (no duplicate…)
-### DDL 
-<In this section write down the DDL you wrote for implementing the provided ER model>
-Query Implementation
-<For each query>
-Query a: 
-Description of logic:
-<What does the query do and how do I decide to solve it>
-SQL statement
-<The SQL statement>
-Query result (if the result is big, just a snippet)
-<The SQL statement result>
+
 
 QUERY E_1:
 
@@ -389,7 +379,7 @@ SQL statement:
 
 Optimization with indexing :
 
-QUERY D4 :
+QUERY D2 : The initial runtime is 0.057 with a cost of 389 I/Os, mainly due to the GROUP BY clause. 
 
 
 
