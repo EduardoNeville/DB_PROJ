@@ -191,6 +191,11 @@ FROM (
 WHERE rank_num <= 10;
 ```
 
+Results :
+
+![Result D2](Query_results/Result_D2.png)
+
+
 QUERY D_3:
 
 Description of logic: 
@@ -215,8 +220,23 @@ Description of logic:
 
 SQL statement:
 ```sql
-
+SELECT distinct RG.city_name as city_name
+FROM REGIONS RG
+WHERE RG.city_name NOT IN ( 
+    SELECT distinct BL.city_name
+    FROM BUSINESS_LOCATION BL
+    WHERE EXISTS (SELECT Business_id 
+    FROM Business Bs
+    WHERE bs.business_id = bl.business_id and bs.review_count < 2  
+    ) 
+) ORDER BY city_name 
+FETCH FIRST 50 ROWS ONLY;
 ```
+
+Result:
+
+![Result D4](Query_results/Result_D4.png)
+
 QUERY D_5:
 
 Description of logic: 
@@ -245,8 +265,29 @@ Description of logic:
 
 SQL statement:
 ```sql
-
+WITH positive_tips AS (
+    SELECT USER_ID, BUSINESS_ID, TIP_DATE
+    FROM TIPS
+    WHERE LOWER(TIP_TEXT) LIKE '%awesome%'),
+user_yesterday AS (
+    SELECT DISTINCT pt1.USER_ID
+    FROM positive_tips pt1
+    JOIN positive_tips pt2 ON pt1.USER_ID = pt2.USER_ID AND TO_DATE(pt1.TIP_DATE, 'DD-MON-RR') - 1 = TO_DATE(pt2.TIP_DATE, 'DD-MON-RR')
+)
+SELECT count(distinct Business_ID) as count 
+FROM positive_tips bs
+WHERE NOT EXISTS (
+    SELECT pt.USER_ID
+    FROM positive_tips pt
+    WHERE bs.BUSINESS_ID = pt.business_id
+    AND pt.USER_ID NOT IN (SELECT USER_ID FROM user_yesterday)
+);
 ```
+
+Results: 
+
+![Result D6](Query_results/Result_D6.png)
+
 QUERY D_7:
 
 Description of logic: 
@@ -299,19 +340,9 @@ Description of logic:
 
 SQL statement:
 ```sql
-SELECT STATE_NAME as state_name, n_b as num_businesses
-FROM (
-  SELECT STATE_NAME, COUNT(*) AS n_b,
-         RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_num
-  FROM BUSINESS_LOCATION
-  GROUP BY STATE_NAME
-) 
-WHERE rank_num <= 10;
+
 ```
 
-Results :
-
-![Result D10](Query_results/Result_D10.png)
 
 
 
