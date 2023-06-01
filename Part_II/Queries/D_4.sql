@@ -2,9 +2,9 @@
 -- at least two reviews. List only the names of the cities (city_name) in alphabetical order. 
 -- Limit the number of returned rows to 50..
 
-SELECT distinct RG.city_name as city_name
-FROM REGIONS RG
-WHERE RG.city_name NOT IN ( 
+SELECT distinct CT.city_name as city_name
+FROM CITIES CT
+WHERE CT.city_name NOT IN ( 
     SELECT distinct BL.city_name
     FROM BUSINESS_LOCATION BL
     WHERE EXISTS (SELECT Business_id 
@@ -13,4 +13,3 @@ WHERE RG.city_name NOT IN (
     ) --cities with businesses having less then two reviews
 ) ORDER BY city_name 
 FETCH FIRST 50 ROWS ONLY;
-

@@ -250,12 +250,17 @@ ORDER BY B.BUSINESS_NAME ASC;
 QUERY D_4:
 
 Description of logic: 
+We first find businesses with less than 2 reviews. Then we select cities which have at least one of these businesses. In the end we link all the cities so that cities with no business do apear adn filter out cities that were slected in the previous sentence.
+In details:
+- A subquery select the Business_id when review_count < 2 in BUSINESS_LOCATION
+- A subquery select tuples in Buisness_location if the buisness_id is in the previous query result
+- A final query select all city_name that are not in the previous subquery.
 
 SQL statement:
 ```sql
-SELECT distinct RG.city_name as city_name
-FROM REGIONS RG
-WHERE RG.city_name NOT IN ( 
+SELECT distinct CT.city_name as city_name
+FROM CITIES CT
+WHERE CT.city_name NOT IN ( 
     SELECT distinct BL.city_name
     FROM BUSINESS_LOCATION BL
     WHERE EXISTS (SELECT Business_id 
@@ -295,6 +300,11 @@ AND B.BUSINESS_ID IN (
 QUERY D_6:
 
 Description of logic: 
+First we store all the positive_tips, the we select all user thast fulfill the "yestersay condition". Then for each business_id, we check if there is a user who left a tip and who is not the user fulfilling the condition.
+In details :
+- We select the USER_ID, BUSINESS_ID, and TIP_DATE from the TIPS table where the TIP_TEXT contains the word "awesome" (= the positive tips) adn store in the table positive_tips
+- WE select distinct USER_IDs from the positive_tips CTE where there exists another tip by the same user with a TIP_DATE one day earlier
+- In the main query, we select the count of distinct BUSINESS_IDs from BUSINESS using a WHERE clause including a subquery that checks for the existence of a USER_ID that is not in users fulfilling the conditions and who gave a positive tip to this business.
 
 SQL statement:
 ```sql
@@ -308,7 +318,7 @@ user_yesterday AS (
     JOIN positive_tips pt2 ON pt1.USER_ID = pt2.USER_ID AND TO_DATE(pt1.TIP_DATE, 'DD-MON-RR') - 1 = TO_DATE(pt2.TIP_DATE, 'DD-MON-RR')
 )
 SELECT count(distinct Business_ID) as count 
-FROM positive_tips bs
+FROM BUSINESS bs
 WHERE NOT EXISTS (
     SELECT pt.USER_ID
     FROM positive_tips pt
