@@ -17,8 +17,8 @@ SELECT
         ) AS reviewer_rank,
     COUNT(R.review_id) AS review_count
 FROM BUSINESS B
-JOIN REVIEW R ON B.business_id = R.business_id
+JOIN REVIEWS R ON B.business_id = R.business_id
 GROUP BY B.business_id, R.user_id
 ORDER BY B.business_id ASC, reviewer_rank ASC
-LIMIT 30;
+FETCH FIRST 30 ROWS ONLY;
 

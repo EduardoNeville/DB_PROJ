@@ -11,5 +11,5 @@
 - D05 v
 - D07 v
 - D08 x <- TODO 
-- D09 x <-
-- D10 x <-
+- D09 x <- TODO
+- D10 x <- TODO
