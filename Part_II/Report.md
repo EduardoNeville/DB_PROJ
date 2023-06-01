@@ -177,6 +177,12 @@ General Comments
 QUERY D_1:
 
 Description of logic: 
+Fisrt we find the business that work more or exactly 5 days a week. Then we find the cities which contain at least one business that work more or exactly 5 days a week. In the end we select all the cities but the one which appeared in the previous table.
+In detail : 
+- We create a table BM5 wich is the selection of buisness_id in buisness_hours which have count of distince day_id superirior or equal to five i.e businezses working more or exactly five days
+- Then we  create a table ct5 which is a right join BUSINESS_LOCATION-BM5 on buisness_id, this allows us to link the businesses working more than or exaclty 5 days a week with their city. Using a right join allows to only select the city_name having a business in BM5. We then select the distinct_name of this join. 
+- In the end we perform a left join CITIES-ct5 on city_name to link eith all the city names, filtering out the ones that are in ct5 by selecting only the rows with NULL in the join. 
+
 
 SQL statement:
 ```sql
