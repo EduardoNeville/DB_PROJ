@@ -174,6 +174,32 @@ SQL statement:
 General Comments
 <In this section write general comments about your deliverable (comments and work allocation between team members>
 
+QUERY D_1:
+
+Description of logic: 
+
+SQL statement:
+```sql
+WITH BM5 AS (SELECT distinct Business_id
+    FROM BUSINESS_HOURS
+    GROUP BY Business_id
+    HAVING COUNT(DISTINCT DAY_ID) >= 5
+    ),--Businesses working more than or exaclty 5 days a week
+CT5 AS (SELECT distinct BL.city_name
+    FROM BUSINESS_LOCATION BL
+    RIGHT JOIN BM5
+on bl.business_id = BM5.business_id) -- cities with businesses working more than or exaclty 5 days a week 
+SELECT cti.city_name 
+FROM CITIES cti
+LEFT JOIN CT5
+on cti.city_name = ct5.city_name
+WHERE ct5.city_name IS NULL;
+```
+
+Results :
+
+![Result D1](Query_results/Result_d1.png)
+
 
 QUERY D_2:
 
@@ -344,7 +370,7 @@ SQL statement:
 ```
 
 
-
+Optimization
 
 
 
