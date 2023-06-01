@@ -212,6 +212,8 @@ QUERY E_9:
 Description of logic: 
     Result colum: Count
 
+We count how many categories each business has and we output the highest value
+
 SQL statement:
 ```sql
 SELECT MAX(category_count) AS "count"
@@ -223,6 +225,7 @@ FROM (
 ```
 
 Result: 
+![Result E9](Query_results/Result_E9.png)
 
 
 QUERY E_10:

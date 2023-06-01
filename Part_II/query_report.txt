@@ -1,15 +1,8 @@
 - E01 x <- TODO
-- E02 v <- DONE
-- E03 v <- DONE
-- E04 v <- DONE
-- E05 x <- DONE
-- E09 v <- Result and write down notes
 - E10 o <- Nothing done 
-- D01 x <- OK
-- D02 v
-- D03 v
-- D05 v
-- D07 v
-- D08 x <- TODO 
-- D09 x <- TODO
-- D10 x <- TODO
+- D03 v <-  Result and write down notes
+- D05 v <-  Result and write down notes 
+- D07 v <-  Result and write down notes
+- D08 x <- TODO finish
+- D09 x <- TODO test
+- D10 x <- TODO start
